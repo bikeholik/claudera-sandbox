@@ -1,0 +1,54 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.2.0.M1'
+	id 'com.github.johnrengelman.shadow' version '5.0.0'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+group = 'com.github.bikeholik'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/snapshot' }
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+shadowJar {
+	baseName = 'spark-app'
+	classifier = null
+	version = null
+	exclude 'spring*.jar'
+}
+
+bootJar {
+	classifier = 'boot'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	compileOnly 'org.apache.spark:spark-streaming_2.11:1.6.3'
+	compileOnly 'org.apache.spark:spark-streaming-kafka_2.11:1.6.3'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+}
