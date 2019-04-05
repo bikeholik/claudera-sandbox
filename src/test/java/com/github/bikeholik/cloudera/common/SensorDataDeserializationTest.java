@@ -1,4 +1,4 @@
-package com.github.bikeholik.claudera.common;
+package com.github.bikeholik.cloudera.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;

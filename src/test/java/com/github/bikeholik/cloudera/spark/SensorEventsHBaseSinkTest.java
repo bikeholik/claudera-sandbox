@@ -1,17 +1,16 @@
-package com.github.bikeholik.claudera.spark;
+package com.github.bikeholik.cloudera.spark;
 
-import com.github.bikeholik.claudera.common.SensorData;
+import com.github.bikeholik.cloudera.common.SensorData;
 import org.apache.hadoop.hbase.client.Put;
 import org.junit.Test;
-import scala.Tuple2;
 
 import static org.junit.Assert.assertNotNull;
 
-public class HBaseSinkApplicationTest {
+public class SensorEventsHBaseSinkTest {
 
     @Test
     public void convert() {
-        Put convert = HBaseSinkApplication.convert("test", SensorData.builder()
+        Put convert = SensorEventsHBaseSink.convert("test", SensorData.builder()
                 .deviceId("d")
                 .temperature(1)
                 .timestamp(System.currentTimeMillis())

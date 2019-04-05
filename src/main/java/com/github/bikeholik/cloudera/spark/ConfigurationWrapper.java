@@ -1,4 +1,4 @@
-package com.github.bikeholik.claudera.spark;
+package com.github.bikeholik.cloudera.spark;
 
 import org.apache.hadoop.mapred.JobConf;
 

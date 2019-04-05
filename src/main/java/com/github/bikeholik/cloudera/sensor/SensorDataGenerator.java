@@ -1,7 +1,7 @@
-package com.github.bikeholik.claudera.sensor;
+package com.github.bikeholik.cloudera.sensor;
 
-import com.github.bikeholik.claudera.common.Location;
-import com.github.bikeholik.claudera.common.SensorData;
+import com.github.bikeholik.cloudera.common.Location;
+import com.github.bikeholik.cloudera.common.SensorData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;

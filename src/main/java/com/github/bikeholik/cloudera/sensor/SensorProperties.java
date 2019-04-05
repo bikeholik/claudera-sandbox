@@ -1,4 +1,4 @@
-package com.github.bikeholik.claudera.sensor;
+package com.github.bikeholik.cloudera.sensor;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

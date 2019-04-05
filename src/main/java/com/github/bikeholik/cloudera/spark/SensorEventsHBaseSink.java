@@ -1,8 +1,8 @@
-package com.github.bikeholik.claudera.spark;
+package com.github.bikeholik.cloudera.spark;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.bikeholik.claudera.common.ObjectMapperSupport;
-import com.github.bikeholik.claudera.common.SensorData;
+import com.github.bikeholik.cloudera.common.ObjectMapperSupport;
+import com.github.bikeholik.cloudera.common.SensorData;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Put;
@@ -26,7 +26,7 @@ import java.util.Date;
 import static org.apache.hadoop.hbase.mapred.TableOutputFormat.OUTPUT_TABLE;
 import static org.apache.hadoop.hbase.util.Bytes.toBytes;
 
-public class HBaseSinkApplication {
+public class SensorEventsHBaseSink {
 
     private static final String SENSOR_DATA_TABLE = "sensor";
     private static final byte[] COLUMN_FAMILY = toBytes("data");
@@ -40,19 +40,11 @@ public class HBaseSinkApplication {
     public static void main(String[] args) {
 
         final ObjectMapper objectMapper = ObjectMapperSupport.createObjectMapper();
-        final Configuration configuration = HBaseConfiguration.create();
-        configuration.set(OUTPUT_TABLE, SENSOR_DATA_TABLE);
-        final JobConf jobConf = new JobConf(configuration, HBaseSinkApplication.class);
-        jobConf.setOutputFormat(TableOutputFormat.class);
-        jobConf.set("mapreduce.output.fileoutputformat.outputdir", "/user/sensor/out");
-        jobConf.set(OUTPUT_TABLE, SENSOR_DATA_TABLE);
-        final ConfigurationWrapper conf = new ConfigurationWrapper(jobConf);
+        final ConfigurationWrapper conf = createConfiguration();
 
         JavaStreamingContext ssc = new JavaStreamingContext(new JavaSparkContext(), Durations.seconds(60));
 
         JavaPairReceiverInputDStream<String, String> stream = KafkaUtils.createStream(ssc, "zookeeper:2181", "sensor-data-hbase-sink", Collections.singletonMap("sensor-events", 1));
-
-//        stream.print(2);
 
         stream.foreachRDD(new VoidFunction<JavaPairRDD<String, String>>() {
             @Override
@@ -76,6 +68,16 @@ public class HBaseSinkApplication {
 
         ssc.start();
         ssc.awaitTermination();
+    }
+
+    private static ConfigurationWrapper createConfiguration() {
+        final Configuration configuration = HBaseConfiguration.create();
+        configuration.set(OUTPUT_TABLE, SENSOR_DATA_TABLE);
+        final JobConf jobConf = new JobConf(configuration, SensorEventsHBaseSink.class);
+        jobConf.setOutputFormat(TableOutputFormat.class);
+        jobConf.set("mapreduce.output.fileoutputformat.outputdir", "/user/sensor/out");
+        jobConf.set(OUTPUT_TABLE, SENSOR_DATA_TABLE);
+        return new ConfigurationWrapper(jobConf);
     }
 
     static Put convert(String raw, SensorData sensorData) {

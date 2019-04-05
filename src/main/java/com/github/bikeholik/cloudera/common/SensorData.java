@@ -1,4 +1,4 @@
-package com.github.bikeholik.claudera.common;
+package com.github.bikeholik.cloudera.common;
 
 import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;

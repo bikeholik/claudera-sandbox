@@ -1,4 +1,4 @@
-package com.github.bikeholik.claudera.common;
+package com.github.bikeholik.cloudera.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

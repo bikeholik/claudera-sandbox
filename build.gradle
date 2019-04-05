@@ -1,16 +1,16 @@
 buildscript {
-	repositories {
-		jcenter()
-	}
-	dependencies {
-		classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
-	}
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
+    }
 }
 
 plugins {
-	id 'org.springframework.boot' version '2.2.0.M1'
-	id 'com.github.johnrengelman.shadow' version '5.0.0'
-	id 'java'
+    id 'org.springframework.boot' version '2.2.0.M1'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -22,36 +22,51 @@ sourceCompatibility = '1.7'
 targetCompatibility = '1.7'
 
 repositories {
-	mavenCentral()
-	maven { url 'https://repo.spring.io/snapshot' }
-	maven { url 'https://repo.spring.io/milestone' }
+    mavenCentral()
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repository.cloudera.com/artifactory/cloudera-repos' }
 }
 
 shadowJar {
-	baseName = 'spark-app'
-	classifier = null
-	version = null
-	exclude 'spring*.jar'
+    baseName = 'spark-app'
+    classifier = null
+    version = null
+    exclude 'spring*.jar'
+    exclude 'hive*'
 }
 
 bootJar {
-	classifier = 'boot'
+    classifier = 'boot'
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.kafka:spring-kafka'
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-	compileOnly 'org.apache.spark:spark-streaming_2.10:1.6.3'
-	compileOnly 'org.apache.spark:spark-streaming-kafka_2.10:1.6.3'
-	compileOnly 'org.apache.hbase:hbase-server:1.2.11'
-	
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+    runtime files("libs/impala-jdbc-2.5.31.jar")
+    runtime 'org.apache.thrift:libthrift:0.9.0'
+    runtime 'org.apache.hive:hive-service:1.1.0'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.kafka:spring-kafka-test'
-	testImplementation 'org.apache.hbase:hbase-server:1.2.11'
-	testImplementation 'org.apache.spark:spark-streaming_2.10:1.6.3'
+    compileOnly 'org.apache.spark:spark-streaming_2.10:1.6.3'
+    compileOnly 'org.apache.spark:spark-streaming-kafka_2.10:1.6.3'
+    compileOnly 'org.apache.hbase:hbase-server:1.2.11'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation 'org.apache.hbase:hbase-server:1.2.11'
+    testImplementation 'org.apache.spark:spark-streaming_2.10:1.6.3'
+}
+
+configurations.compile {
+    exclude group: "commons-logging", module: "commons-logging"
+//    exclude group: "ch.qos.logback", module: "logback-classic"
+    exclude group: "org.slf4j", module: "slf4j-simple"
+    exclude group: "org.slf4j", module: "slf4j-log4j12"
+    exclude group: "org.apache.calcite"
 }

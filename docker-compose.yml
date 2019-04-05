@@ -7,13 +7,16 @@ services:
       - kafka
     volumes:
       - ./build/libs:/apps
-    command: java -Dsensor.frequency=PT5S -jar /apps/claudera-sandbox-0.0.1-SNAPSHOT-boot.jar
+    ports:
+      - "18080:8080"
+    command: java -Dsensor.frequency=PT1S -jar /apps/cloudera-sandbox-0.0.1-SNAPSHOT-boot.jar
   claudera:
     image: cloudera/quickstart:5.13.0-0-beta
     ports:
       - "8888:8888"
       - "8088:8088"
       - "8042:8042"
+      - "21050:21050"
     privileged: true
     hostname: quickstart.cloudera
     container_name: quickstart.cloudera

@@ -1,7 +1,7 @@
-package com.github.bikeholik.claudera.kafka;
+package com.github.bikeholik.cloudera.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.bikeholik.claudera.common.ObjectMapperSupport;
+import com.github.bikeholik.cloudera.common.ObjectMapperSupport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
