@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import java.io.Serializable;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @JsonRootName("data")
-public class SensorData {
+public class SensorData implements Serializable {
     private String deviceId;
     private int temperature;
     private Location location;

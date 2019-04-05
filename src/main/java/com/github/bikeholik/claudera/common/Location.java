@@ -3,15 +3,15 @@ package com.github.bikeholik.claudera.common;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import java.io.Serializable;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Location {
+public class Location implements Serializable {
     private double latitude;
     private double longitude;
 }

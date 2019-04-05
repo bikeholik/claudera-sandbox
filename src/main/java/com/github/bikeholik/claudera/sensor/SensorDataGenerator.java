@@ -23,7 +23,7 @@ class SensorDataGenerator {
         SensorData data = SensorData.builder()
                 .deviceId(id.toString())
                 .temperature(random.nextInt(30))
-                .timestamp(now / 1000)
+                .timestamp(now)
                 .location(Location.builder()
                         .latitude(random.nextDouble(180d))
                         .longitude(random.nextDouble(180d))
