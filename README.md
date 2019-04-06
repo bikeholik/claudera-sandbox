@@ -21,13 +21,13 @@ Upon running `docker-compose up -d` experiment environment is started and set up
  * [hive table](./scripts/create_sensor_data_table.sql)
  * impala is given access to hive table
  
- Application that generates sample data is automatically started. Frequency of sending events and number of sensors can be configured with properties. Kafka topic is automatically created.
+ Spring boot application that generates sample data is automatically started. Frequency of sending events and number of sensors can be configured with properties. Kafka topic is automatically created.
  
  Data can be seen running [kafka-console-consumer](./kafka/start-console-consumer.sh), e.g.: ![](./screenshots/kafka-console-consumer.png)
  
  ## spark job
  
- To start a job writing data from kafka to hadoop run [run-spark-job](./spark/run-spark-job.sh) script. It will read data from `sensor-events` topic and write it to `sensor` HBase table.
+ To start a [job](./src/main/java/com/github/bikeholik/cloudera/spark/SensorEventsHBaseSink.java) writing data from kafka to hadoop run [run-spark-job](./spark/run-spark-job.sh) script. It will read data from `sensor-events` topic and write it to `sensor` HBase table.
  
  Sample row data that can be seen in HBase table: ![](./screenshots/hbase.png)
  
