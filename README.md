@@ -17,7 +17,7 @@ To build project run:
 ```
 
 Upon running `docker-compose up -d` experiment environment is started and set up. Necessary Hadoop components are created as per [scripts/init.sh](./scripts/init.sh). There following components are created:
- * [hbase table](./scripts/hbase-commands.txt))
+ * [hbase table](./scripts/hbase-commands.txt)
  * [hive table](./scripts/create_sensor_data_table.sql)
  * impala is given access to hive table
  
@@ -37,5 +37,7 @@ Upon running `docker-compose up -d` experiment environment is started and set up
   * [max temperature per device](http://localhost:18080/v1/analytics/1)
   * [amount of points collected per device](http://localhost:18080/v1/analytics/2)
   * max temperature per device in given date, e.g. ![](./screenshots/sample-query.png)
+  
+ _Note that links point to the service running locally._
   
  Queries are defined in [properties file](./src/main/resources/application.properties)
