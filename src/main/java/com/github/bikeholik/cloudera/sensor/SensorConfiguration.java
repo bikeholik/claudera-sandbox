@@ -9,7 +9,7 @@ import org.springframework.core.env.Environment;
 @Configuration
 class SensorConfiguration {
     @Bean
-    SensorRegistrar sensorRegistrar(SensorProperties sensorProperties, Environment environment){
+    SensorRegistrar sensorRegistrar(Environment environment){
         return new SensorRegistrar(environment.getRequiredProperty("sensor.sensors-count", Integer.class));
     }
 }

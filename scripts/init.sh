@@ -8,16 +8,22 @@ echo "Start cloudera services"
 
 # setup sandbox
 
-sleep 30
+if [[ ! -f /tmp/.init ]]; then
 
-echo "Create hbase table"
+    sleep 30
 
-hbase shell /scripts/hbase-commands.txt
+    echo "Create hbase table"
 
-echo "Create hive table"
+    hbase shell /scripts/hbase-commands.txt
 
-hive -f /scripts/create_sensor_data_table.sql
+    echo "Create hive table"
 
-impala-shell -q 'invalidate metadata sensor_data'
+    hive -f /scripts/create_sensor_data_table.sql
+
+    impala-shell -q 'invalidate metadata sensor_data'
+
+    touch /tmp/.init
+
+fi
 
 exec bash

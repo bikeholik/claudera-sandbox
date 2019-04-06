@@ -22,15 +22,23 @@ class SensorDataGenerator {
         long now = System.currentTimeMillis();
         SensorData data = SensorData.builder()
                 .deviceId(id.toString())
-                .temperature(random.nextInt(30))
+                .temperature(getTemperature(random))
                 .timestamp(now)
                 .location(Location.builder()
-                        .latitude(random.nextDouble(180d))
-                        .longitude(random.nextDouble(180d))
+                        .latitude(getCoordinate(random))
+                        .longitude(getCoordinate(random))
                         .build())
                 .build();
         log.debug("operation=send deviceId={} data={}", id, data);
         kafkaTemplate.send("sensor-events", String.valueOf(now), data);
+    }
+
+    private double getCoordinate(ThreadLocalRandom random) {
+        return random.nextDouble(180d);
+    }
+
+    private int getTemperature(ThreadLocalRandom random) {
+        return random.nextInt(71) - 10;
     }
 
 }
