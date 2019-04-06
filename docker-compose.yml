@@ -1,4 +1,6 @@
 version: '3'
+networks:
+  cloudera-sandbox:
 services:
   generator-app:
     image: openjdk:8-jre-alpine
@@ -10,7 +12,9 @@ services:
     ports:
       - "18080:8080"
     command: java -Dsensor.frequency=PT1S -jar /apps/cloudera-sandbox-0.0.1-SNAPSHOT-boot.jar
-  claudera:
+    networks:
+      - cloudera-sandbox
+  cloudera:
     image: cloudera/quickstart:5.13.0-0-beta
     ports:
       - "8888:8888"
@@ -20,8 +24,6 @@ services:
     privileged: true
     hostname: quickstart.cloudera
     container_name: quickstart.cloudera
-    depends_on:
-      - kafka
     tty: true
     stdin_open: true
     command: /scripts/init.sh
@@ -30,23 +32,17 @@ services:
     volumes:
       - ./build/libs:/apps
       - ./scripts:/scripts
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:5.0.0
-    hostname: zookeeper
-    container_name: zookeeper
-    ports:
-    - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      cloudera-sandbox:
+        aliases:
+          - zookeeper
 
   kafka:
     image: confluentinc/cp-enterprise-kafka:5.0.0
     hostname: kafka
     container_name: kafka
     depends_on:
-    - zookeeper
+      - cloudera
     ports:
     - "9092:9092"
     - "29092:29092"
@@ -65,16 +61,5 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'false'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
-
-#  schema-registry:
-#    image: confluentinc/cp-schema-registry:5.0.0
-#    hostname: schema-registry
-#    container_name: schema-registry
-#    depends_on:
-#    - zookeeper
-#    - kafka
-#    ports:
-#    - "8081:8081"
-#    environment:
-#      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-#      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+    networks:
+      - cloudera-sandbox

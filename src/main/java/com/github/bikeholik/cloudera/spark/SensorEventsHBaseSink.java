@@ -39,12 +39,14 @@ public class SensorEventsHBaseSink {
 
     public static void main(String[] args) {
 
+        Parameters parameters = Parameters.from(args);
+
         final ObjectMapper objectMapper = ObjectMapperSupport.createObjectMapper();
         final ConfigurationWrapper conf = createConfiguration();
 
         JavaStreamingContext ssc = new JavaStreamingContext(new JavaSparkContext(), Durations.seconds(60));
 
-        JavaPairReceiverInputDStream<String, String> stream = KafkaUtils.createStream(ssc, "zookeeper:2181", "sensor-data-hbase-sink", Collections.singletonMap("sensor-events", 1));
+        JavaPairReceiverInputDStream<String, String> stream = createKafkaInputStream(parameters, ssc);
 
         stream.foreachRDD(new VoidFunction<JavaPairRDD<String, String>>() {
             @Override
@@ -68,6 +70,10 @@ public class SensorEventsHBaseSink {
 
         ssc.start();
         ssc.awaitTermination();
+    }
+
+    private static JavaPairReceiverInputDStream<String, String> createKafkaInputStream(Parameters parameters, JavaStreamingContext ssc) {
+        return KafkaUtils.createStream(ssc, parameters.getZookeeperHosts(), "sensor-data-hbase-sink", Collections.singletonMap("sensor-events", parameters.getPartitionsCount()));
     }
 
     private static ConfigurationWrapper createConfiguration() {
